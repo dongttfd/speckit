@@ -60,3 +60,5 @@ docs/dev
 .grok/
 .specify/
 specs/
+.claude
+.gitnexus

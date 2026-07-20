@@ -82,6 +82,24 @@ specify init my-project --integration copilot
 cd my-project
 ```
 
+To install the latest version directly from this repository instead of PyPI:
+
+```bash
+uv tool install specify-cli --force --from git+https://github.com/dongttfd/speckit.git@main
+```
+
+For reproducible installs, replace `main` with a release tag from this
+repository.
+
+To generate specifications, plans, tasks, and checklists in Vietnamese, pass
+`--language vi` during initialization:
+
+```bash
+specify init my-project --integration copilot --language vi
+```
+
+English (`en`) remains the default document language.
+
 <a id="-supported-ai-coding-agent-integrations"></a>
 
 After installing the Specify CLI and creating your project, launch your coding

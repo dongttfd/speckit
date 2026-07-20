@@ -15,6 +15,22 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Document Language
+
+Check `.specify/init-options.json` for the `language` field.
+
+- If `"vi"`:
+  - Output MUST be written in Vietnamese WITH FULL DIACRITICS (Unicode, có dấu đầy đủ)
+  - All explanations MUST use proper Vietnamese spelling and accents
+  - DO NOT use non-accented Vietnamese (e.g., "khong dau")
+  - Technical terms MAY remain in English when necessary
+  - If any content is generated in English or without Vietnamese diacritics, it MUST be rewritten correctly in Vietnamese with full accents
+  - This requirement applies to both file content written to disk AND conversational responses in this session
+
+  > IMPORTANT: Vietnamese output MUST include proper diacritics (Unicode). ASCII-only Vietnamese is NOT allowed.
+
+- Otherwise: use English (default).
+
 ## Pre-Execution Checks
 
 **Check for extension hooks (before tasks-to-issues conversion)**:
