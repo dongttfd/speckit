@@ -44,6 +44,136 @@ class TestCliDiagnosticFormatting:
 
 
 class TestInitIntegrationFlag:
+    def test_invalid_document_language_rejected(self, tmp_path):
+        from typer.testing import CliRunner
+        from specify_cli import app
+
+        project = tmp_path / "invalid-language"
+        result = CliRunner().invoke(
+            app,
+            ["init", str(project), "--language", "fr"],
+        )
+
+        assert result.exit_code == 1
+        assert "Invalid document language 'fr'" in result.output
+        assert not project.exists()
+
+    @pytest.mark.parametrize(
+        ("extra_args", "expected_language", "expects_vietnamese"),
+        [
+            ([], "en", False),
+            (["--language", "en"], "en", False),
+            (["--language", "vi"], "vi", True),
+        ],
+    )
+    def test_init_selects_document_templates(
+        self,
+        tmp_path,
+        extra_args,
+        expected_language,
+        expects_vietnamese,
+    ):
+        from typer.testing import CliRunner
+        from specify_cli import app
+
+        project = tmp_path / f"language-{expected_language}-{len(extra_args)}"
+        result = CliRunner().invoke(
+            app,
+            [
+                "init", str(project), "--integration", "copilot", "--script", "sh",
+                *extra_args,
+            ],
+            catch_exceptions=False,
+        )
+
+        assert result.exit_code == 0, result.output
+        spec = (project / ".specify" / "templates" / "spec-template.md").read_text(
+            encoding="utf-8"
+        )
+        constitution = (
+            project / ".specify" / "templates" / "constitution-template.md"
+        ).read_text(encoding="utf-8")
+        language_marker = "Output MUST be written in Vietnamese WITH FULL DIACRITICS"
+        assert (language_marker in spec) is expects_vietnamese
+        assert language_marker not in constitution
+
+        opts = json.loads(
+            (project / ".specify" / "init-options.json").read_text(encoding="utf-8")
+        )
+        assert opts["language"] == expected_language
+
+    def test_shared_infra_refresh_uses_persisted_document_language(self, tmp_path):
+        from typer.testing import CliRunner
+        import specify_cli
+        from specify_cli import app
+
+        project = tmp_path / "persisted-language"
+        result = CliRunner().invoke(
+            app,
+            [
+                "init", str(project), "--integration", "copilot", "--script", "sh",
+                "--language", "vi",
+            ],
+            catch_exceptions=False,
+        )
+        assert result.exit_code == 0, result.output
+
+        spec = project / ".specify" / "templates" / "spec-template.md"
+        spec.write_text("# stale\n", encoding="utf-8")
+        specify_cli._install_shared_infra(project, "sh", force=True)
+
+        refreshed = spec.read_text(encoding="utf-8")
+        assert "Output MUST be written in Vietnamese WITH FULL DIACRITICS" in refreshed
+
+    def test_vietnamese_templates_overlay_english_base(self, tmp_path):
+        from specify_cli.shared_infra import install_shared_infra
+
+        project = tmp_path / "project"
+        project.mkdir()
+        core_pack = tmp_path / "core-pack"
+        base = core_pack / "templates"
+        localized = core_pack / "templates-vi"
+        base.mkdir(parents=True)
+        localized.mkdir(parents=True)
+        (base / "spec-template.md").write_text("# English spec\n", encoding="utf-8")
+        (base / "constitution-template.md").write_text(
+            "# English constitution\n", encoding="utf-8"
+        )
+        (localized / "spec-template.md").write_text(
+            "# Vietnamese spec\n", encoding="utf-8"
+        )
+
+        install_shared_infra(
+            project,
+            "sh",
+            version="test",
+            core_pack=core_pack,
+            repo_root=tmp_path / "unused",
+            console=_NoopConsole(),
+            language="vi",
+        )
+
+        installed = project / ".specify" / "templates"
+        assert (installed / "spec-template.md").read_text(encoding="utf-8") == (
+            "# Vietnamese spec\n"
+        )
+        assert (installed / "constitution-template.md").read_text(
+            encoding="utf-8"
+        ) == "# English constitution\n"
+
+    def test_unsupported_shared_template_language_rejected(self, tmp_path):
+        from specify_cli._init_options import get_document_language
+        from specify_cli.shared_infra import shared_template_files
+
+        assert get_document_language({"language": []}) == "en"
+
+        with pytest.raises(ValueError, match="Unsupported document language: fr"):
+            shared_template_files(
+                core_pack=None,
+                repo_root=tmp_path,
+                language="fr",
+            )
+
     def test_unknown_integration_rejected(self, tmp_path):
         from typer.testing import CliRunner
         from specify_cli import app

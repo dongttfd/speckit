@@ -11,6 +11,7 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from ._init_options import DEFAULT_DOCUMENT_LANGUAGE, DOCUMENT_LANGUAGE_CHOICES
 from .integrations.base import IntegrationBase
 from .integrations.manifest import IntegrationManifest
 
@@ -143,6 +144,57 @@ def shared_templates_source(
     if core_pack and (core_pack / "templates").is_dir():
         return core_pack / "templates"
     return repo_root / "templates"
+
+
+def shared_template_sources(
+    *,
+    core_pack: Path | None,
+    repo_root: Path,
+    language: str = DEFAULT_DOCUMENT_LANGUAGE,
+) -> tuple[Path, ...]:
+    """Return base templates plus an optional language-specific overlay."""
+    if language not in DOCUMENT_LANGUAGE_CHOICES:
+        raise ValueError(f"Unsupported document language: {language}")
+
+    base = shared_templates_source(core_pack=core_pack, repo_root=repo_root)
+    if language == DEFAULT_DOCUMENT_LANGUAGE:
+        return (base,)
+
+    localized = (
+        core_pack / f"templates-{language}"
+        if core_pack is not None
+        else repo_root / f"templates-{language}"
+    )
+    if not localized.is_dir():
+        raise ValueError(
+            f"Bundled templates for document language '{language}' were not found"
+        )
+    return base, localized
+
+
+def shared_template_files(
+    *,
+    core_pack: Path | None,
+    repo_root: Path,
+    language: str = DEFAULT_DOCUMENT_LANGUAGE,
+) -> tuple[Path, ...]:
+    """Resolve template files, with localized files overriding base files."""
+    resolved: dict[str, Path] = {}
+    for source in shared_template_sources(
+        core_pack=core_pack,
+        repo_root=repo_root,
+        language=language,
+    ):
+        if not source.is_dir():
+            continue
+        for template in source.iterdir():
+            if (
+                template.is_file()
+                and template.name != "vscode-settings.json"
+                and not template.name.startswith(".")
+            ):
+                resolved[template.name] = template
+    return tuple(resolved.values())
 
 
 def shared_scripts_source(
@@ -351,10 +403,15 @@ def refresh_shared_templates(
     invoke_separator: str,
     invoke_prefix: str = "/",
     force: bool = False,
+    language: str = DEFAULT_DOCUMENT_LANGUAGE,
 ) -> None:
     """Refresh default-sensitive shared templates without touching scripts."""
-    templates_src = shared_templates_source(core_pack=core_pack, repo_root=repo_root)
-    if not templates_src.is_dir():
+    templates = shared_template_files(
+        core_pack=core_pack,
+        repo_root=repo_root,
+        language=language,
+    )
+    if not templates:
         return
 
     manifest = load_speckit_manifest(project_path, version=version, console=console)
@@ -365,10 +422,7 @@ def refresh_shared_templates(
 
     dest_templates = project_path / ".specify" / "templates"
     _ensure_safe_shared_directory(project_path, dest_templates)
-    for src in templates_src.iterdir():
-        if not src.is_file() or src.name == "vscode-settings.json" or src.name.startswith("."):
-            continue
-
+    for src in templates:
         dst = dest_templates / src.name
         _ensure_safe_shared_destination(project_path, dst)
         rel = dst.relative_to(project_path).as_posix()
@@ -413,6 +467,7 @@ def install_shared_infra(
     invoke_prefix: str = "/",
     refresh_managed: bool = False,
     refresh_hint: str | None = None,
+    language: str = DEFAULT_DOCUMENT_LANGUAGE,
 ) -> bool:
     """Install shared scripts and templates into *project_path*.
 
@@ -579,14 +634,15 @@ def install_shared_infra(
                         )
                     )
 
-    templates_src = shared_templates_source(core_pack=core_pack, repo_root=repo_root)
-    if templates_src.is_dir():
+    templates = shared_template_files(
+        core_pack=core_pack,
+        repo_root=repo_root,
+        language=language,
+    )
+    if templates:
         dest_templates = project_path / ".specify" / "templates"
         if _ensure_or_bucket_dir(dest_templates):
-            for src in templates_src.iterdir():
-                if not src.is_file() or src.name == "vscode-settings.json" or src.name.startswith("."):
-                    continue
-
+            for src in templates:
                 dst = dest_templates / src.name
                 rel = dst.relative_to(project_path).as_posix()
                 seen_rels.add(rel)

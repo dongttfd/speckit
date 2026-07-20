@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-    <a href="https://github.com/github/spec-kit/releases/latest"><img src="https://img.shields.io/github/v/release/github/spec-kit" alt="Latest Release"/></a>
-    <a href="https://github.com/github/spec-kit/stargazers"><img src="https://img.shields.io/github/stars/github/spec-kit?style=social" alt="GitHub stars"/></a>
-    <a href="https://github.com/github/spec-kit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/github/spec-kit" alt="License"/></a>
+    <a href="https://github.com/dongttfd/speckit/releases/latest"><img src="https://img.shields.io/github/v/release/dongttfd/speckit" alt="Latest Release"/></a>
+    <a href="https://github.com/dongttfd/speckit/stargazers"><img src="https://img.shields.io/github/stars/dongttfd/speckit?style=social" alt="GitHub stars"/></a>
+    <a href="https://github.com/dongttfd/speckit/blob/main/LICENSE"><img src="https://img.shields.io/github/license/dongttfd/speckit" alt="License"/></a>
     <a href="https://github.github.io/spec-kit/"><img src="https://img.shields.io/badge/docs-GitHub_Pages-blue" alt="Documentation"/></a>
 </p>
 
@@ -36,6 +36,7 @@
 - [🌟 Development Phases](#-development-phases)
 - [🎯 Experimental Goals](#-experimental-goals)
 - [🔧 Prerequisites](#-prerequisites)
+- [🔄 Sync Fork With Upstream](#-sync-fork-with-upstream)
 - [📖 Learn More](#-learn-more)
 - [💬 Support](#-support)
 - [🙏 Acknowledgements](#-acknowledgements)
@@ -49,10 +50,10 @@ Spec-Driven Development **flips the script** on traditional software development
 
 ### 1. Install Specify CLI
 
-Requires **[uv](https://docs.astral.sh/uv/)** ([install uv](./docs/install/uv.md)). Replace `vX.Y.Z` with the latest release tag from [Releases](https://github.com/github/spec-kit/releases) — keep the leading `v` (for example, `v0.12.11`, not `0.12.11`):
+Requires **[uv](https://docs.astral.sh/uv/)** ([install uv](./docs/install/uv.md)). Replace `vX.Y.Z` with the latest release tag from [Releases](https://github.com/dongttfd/speckit/releases) — keep the leading `v` (for example, `v0.12.11`, not `0.12.11`):
 
 ```bash
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git@vX.Y.Z
+uv tool install specify-cli --from git+https://github.com/dongttfd/speckit.git@vX.Y.Z
 ```
 
 Prefer installing from PyPI? The `specify-cli` package is also published there:
@@ -69,6 +70,16 @@ See the [Installation Guide](./docs/installation.md) for alternative methods, ve
 specify init my-project --integration copilot
 cd my-project
 ```
+
+Generated documents use English templates by default. To generate feature
+specifications, implementation plans, task lists, and checklists in Vietnamese,
+initialize the project with `--language vi`:
+
+```bash
+specify init my-project --integration copilot --language vi
+```
+
+The supported document languages are `en` (default) and `vi`.
 
 To check for updates or upgrade the installed CLI, use the self-management commands. See the [Upgrade Guide](./docs/upgrade.md) for detailed scenarios and customization options.
 
@@ -364,6 +375,31 @@ Our research and experimentation focus on:
 
 If you encounter issues with an agent, please open an issue so we can refine the integration.
 
+## 🔄 Sync Fork With Upstream
+
+If you forked Spec Kit and want to keep your local `main` aligned with `github/spec-kit`, use the helper script:
+
+```bash
+./tools/sync-spec-kit-main.sh
+```
+
+By default, it will:
+
+- add or update an `upstream` remote pointing at `git@github.com:github/spec-kit.git`
+- fetch `upstream`
+- merge `upstream/main` into your local `main`
+
+Useful options:
+
+- `--rebase` to rebase instead of merging
+- `--push` to push the synced branch back to `origin/main`
+
+Example:
+
+```bash
+./tools/sync-spec-kit-main.sh --rebase --push
+```
+
 ## 📖 Learn More
 
 - **[Complete Spec-Driven Development Methodology](./spec-driven.md)** - Deep dive into the full process
@@ -373,7 +409,7 @@ If you encounter issues with an agent, please open an issue so we can refine the
 
 ## 💬 Support
 
-For support, please open a [GitHub issue](https://github.com/github/spec-kit/issues/new). We welcome bug reports, feature requests, and questions about using Spec-Driven Development.
+For support, please open a [GitHub issue](https://github.com/dongttfd/speckit/issues/new). We welcome bug reports, feature requests, and questions about using Spec-Driven Development.
 
 ## 🙏 Acknowledgements
 

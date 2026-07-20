@@ -7,6 +7,11 @@ from typing import Any, Union
 
 
 INIT_OPTIONS_FILE = ".specify/init-options.json"
+DEFAULT_DOCUMENT_LANGUAGE = "en"
+DOCUMENT_LANGUAGE_CHOICES = {
+    "en": "English",
+    "vi": "Vietnamese",
+}
 
 
 class _MissingInitOptionsFile:
@@ -81,3 +86,12 @@ def resolve_active_agent_for_registration(
     if isinstance(active_agent, str) and active_agent:
         return active_agent
     return None
+
+def get_document_language(opts: Mapping[str, Any] | None) -> str:
+    """Return the persisted document language, defaulting safely to English."""
+    if not isinstance(opts, Mapping):
+        return DEFAULT_DOCUMENT_LANGUAGE
+    language = opts.get("language")
+    if isinstance(language, str) and language in DOCUMENT_LANGUAGE_CHOICES:
+        return language
+    return DEFAULT_DOCUMENT_LANGUAGE

@@ -26,6 +26,7 @@ from .._assets import (
     get_speckit_version,
 )
 from .._console import StepTracker, console, select_with_arrows, show_banner
+from .._init_options import DEFAULT_DOCUMENT_LANGUAGE, DOCUMENT_LANGUAGE_CHOICES
 from .._utils import check_tool
 
 
@@ -313,6 +314,11 @@ def register(app: typer.Typer) -> None:
             "--trust-extension-urls",
             help="Pre-authorize installing extensions from external URLs without the interactive trust prompt (required for non-interactive URL installs).",
         ),
+        language: str = typer.Option(
+            DEFAULT_DOCUMENT_LANGUAGE,
+            "--language",
+            help="Generated document language: en or vi",
+        ),
     ):
         """
         Initialize a new Specify project.
@@ -349,6 +355,7 @@ def register(app: typer.Typer) -> None:
             specify init my-project --extension git --extension selftest  # Multiple extensions
             specify init my-project --extension ./my-extensions/custom-ext  # Local path extension
             specify init my-project --extension https://example.com/extensions/my-ext.zip --trust-extension-urls  # URL extension (non-interactive)
+            specify init my-project --language vi          # Generate documents in Vietnamese
         """
         # Lazy imports to avoid circular dependency — __init__.py imports this module
         from .. import (
@@ -369,6 +376,14 @@ def register(app: typer.Typer) -> None:
         show_banner()
 
         from ..integrations import INTEGRATION_REGISTRY, get_integration
+
+        if language not in DOCUMENT_LANGUAGE_CHOICES:
+            choices = ", ".join(DOCUMENT_LANGUAGE_CHOICES)
+            console.print(
+                f"[red]Error:[/red] Invalid document language '{language}'. "
+                f"Choose from: {choices}"
+            )
+            raise typer.Exit(1)
 
         if integration:
             resolved_integration = get_integration(integration)
@@ -578,6 +593,10 @@ def register(app: typer.Typer) -> None:
 
         console.print(f"[cyan]Selected coding agent integration:[/cyan] {selected_ai}")
         console.print(f"[cyan]Selected script type:[/cyan] {selected_script}")
+        console.print(
+            f"[cyan]Selected document language:[/cyan] "
+            f"{DOCUMENT_LANGUAGE_CHOICES[language]} ({language})"
+        )
 
         tracker = StepTracker("Initialize Specify Project")
 
@@ -721,6 +740,7 @@ def register(app: typer.Typer) -> None:
                         integration_parsed_options,
                         project_path,
                     ),
+                    language=language,
                 )
                 tracker.complete(
                     "shared-infra", f"scripts ({selected_script}) + templates"
@@ -770,6 +790,7 @@ def register(app: typer.Typer) -> None:
                     "integration": resolved_integration.key,
                     "here": here,
                     "script": selected_script,
+                    "language": language,
                     "feature_numbering": "sequential",
                     "speckit_version": get_speckit_version(),
                 }

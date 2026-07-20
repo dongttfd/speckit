@@ -110,6 +110,8 @@ def _run_init(integration: str, *, script_type: str, offline: bool = False) -> N
         for c in app.registered_commands
         if c.callback and c.callback.__name__ == "init"
     )
+    from ..._init_options import DEFAULT_DOCUMENT_LANGUAGE
+
     try:
         init_cb(
             project_name=None,
@@ -126,6 +128,7 @@ def _run_init(integration: str, *, script_type: str, offline: bool = False) -> N
             integration_options=None,
             extensions=None,
             trust_extension_urls=False,
+            language=DEFAULT_DOCUMENT_LANGUAGE,
         )
     except typer.Exit as exc:
         if exc.exit_code:

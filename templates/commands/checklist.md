@@ -44,6 +44,22 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Document Language
+
+Check `.specify/init-options.json` for the `language` field.
+
+- If `"vi"`:
+  - Output MUST be written in Vietnamese WITH FULL DIACRITICS (Unicode, có dấu đầy đủ)
+  - All explanations MUST use proper Vietnamese spelling and accents
+  - DO NOT use non-accented Vietnamese (e.g., "khong dau")
+  - Technical terms MAY remain in English when necessary
+  - If any content is generated in English or without Vietnamese diacritics, it MUST be rewritten correctly in Vietnamese with full accents
+  - This requirement applies to both file content written to disk AND conversational responses in this session
+
+  > IMPORTANT: Vietnamese output MUST include proper diacritics (Unicode). ASCII-only Vietnamese is NOT allowed.
+
+- Otherwise: use English (default).
+
 ## Pre-Execution Checks
 
 **Check for extension hooks (before checklist generation)**:
@@ -255,7 +271,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - ✅ "Are [edge cases/scenarios] addressed in requirements?"
    - ✅ "Does the spec define [missing aspect]?"
 
-7. **Structure Reference**: Generate the checklist following the canonical template in `templates/checklist-template.md` for title, meta section, category headings, ownership note, notes section, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, an ownership note explaining that `[x]` means reviewer approval of requirements quality, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001, and notes that `__SPECKIT_COMMAND_IMPLEMENT__` reads checklist state but does not modify markers.
+7. **Structure Reference**: Generate the checklist following the canonical template in `.specify/templates/checklist-template.md` for title, meta section, category headings, ownership note, notes section, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, an ownership note explaining that `[x]` means reviewer approval of requirements quality, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001, and notes that `__SPECKIT_COMMAND_IMPLEMENT__` reads checklist state but does not modify markers.
 
 8. **Report**: Output full path to checklist file, item count, and summarize whether the run created a new file or appended to an existing one. Summarize:
    - Focus areas selected

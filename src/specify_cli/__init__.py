@@ -82,7 +82,10 @@ from ._agent_config import (
     resolve_default_init_integration as resolve_default_init_integration,
 )
 from ._init_options import (
+    DEFAULT_DOCUMENT_LANGUAGE as DEFAULT_DOCUMENT_LANGUAGE,
+    DOCUMENT_LANGUAGE_CHOICES as DOCUMENT_LANGUAGE_CHOICES,
     INIT_OPTIONS_FILE as INIT_OPTIONS_FILE,
+    get_document_language as get_document_language,
     is_ai_skills_enabled as _is_ai_skills_enabled,
     load_init_options as load_init_options,
     save_init_options as save_init_options,
@@ -118,8 +121,12 @@ def _refresh_shared_templates(
     invoke_separator: str,
     invoke_prefix: str = "/",
     force: bool = False,
+    language: str | None = None,
 ) -> None:
     """Refresh default-sensitive shared templates without touching scripts."""
+    selected_language = language or get_document_language(
+        load_init_options(project_path)
+    )
     _refresh_shared_templates_impl(
         project_path,
         version=get_speckit_version(),
@@ -129,6 +136,7 @@ def _refresh_shared_templates(
         invoke_separator=invoke_separator,
         invoke_prefix=invoke_prefix,
         force=force,
+        language=selected_language,
     )
 
 
@@ -141,6 +149,7 @@ def _install_shared_infra(
     invoke_prefix: str = "/",
     refresh_managed: bool = False,
     refresh_hint: str | None = None,
+    language: str | None = None,
 ) -> bool:
     """Install shared infrastructure files into *project_path*.
 
@@ -173,6 +182,9 @@ def _install_shared_infra(
 
     Returns ``True`` on success.
     """
+    selected_language = language or get_document_language(
+        load_init_options(project_path)
+    )
     return _install_shared_infra_impl(
         project_path,
         script_type,
@@ -185,6 +197,7 @@ def _install_shared_infra(
         invoke_prefix=invoke_prefix,
         refresh_managed=refresh_managed,
         refresh_hint=refresh_hint,
+        language=selected_language,
     )
 
 
@@ -197,6 +210,7 @@ def _install_shared_infra_or_exit(
     invoke_prefix: str = "/",
     refresh_managed: bool = False,
     refresh_hint: str | None = None,
+    language: str | None = None,
 ) -> bool:
     try:
         return _install_shared_infra(
@@ -208,6 +222,7 @@ def _install_shared_infra_or_exit(
             invoke_prefix=invoke_prefix,
             refresh_managed=refresh_managed,
             refresh_hint=refresh_hint,
+            language=language,
         )
     except (ValueError, OSError) as exc:
         console.print(f"[red]Error:[/red] Failed to install shared infrastructure: {exc}")
