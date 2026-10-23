@@ -2596,6 +2596,8 @@ class TestGenericIntegration:
         )
         expected = sorted([
             ".myagent/commands/speckit.analyze.md",
+            ".myagent/commands/speckit.avatar-brainstorm.md",
+            ".myagent/commands/speckit.brainstorm.md",
             ".myagent/commands/speckit.checklist.md",
             ".myagent/commands/speckit.clarify.md",
             ".myagent/commands/speckit.constitution.md",
@@ -2620,6 +2622,10 @@ class TestGenericIntegration:
             ".specify/scripts/bash/setup-tasks.sh",
             ".specify/templates/checklist-template.md",
             ".specify/templates/constitution-template.md",
+            ".specify/templates/idea-brief-template.md",
+            ".specify/templates/idea-changelog-template.md",
+            ".specify/templates/idea-roadmap-template.md",
+            ".specify/templates/idea-sources-template.md",
             ".specify/templates/plan-template.md",
             ".specify/templates/spec-template.md",
             ".specify/templates/tasks-template.md",
@@ -2744,6 +2750,8 @@ class TestGenericIntegration:
         )
         expected = sorted([
             ".myagent/commands/speckit.analyze.md",
+            ".myagent/commands/speckit.avatar-brainstorm.md",
+            ".myagent/commands/speckit.brainstorm.md",
             ".myagent/commands/speckit.checklist.md",
             ".myagent/commands/speckit.clarify.md",
             ".myagent/commands/speckit.constitution.md",
@@ -2768,6 +2776,10 @@ class TestGenericIntegration:
             ".specify/scripts/powershell/setup-tasks.ps1",
             ".specify/templates/checklist-template.md",
             ".specify/templates/constitution-template.md",
+            ".specify/templates/idea-brief-template.md",
+            ".specify/templates/idea-changelog-template.md",
+            ".specify/templates/idea-roadmap-template.md",
+            ".specify/templates/idea-sources-template.md",
             ".specify/templates/plan-template.md",
             ".specify/templates/spec-template.md",
             ".specify/templates/tasks-template.md",

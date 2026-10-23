@@ -59,6 +59,8 @@ from ..shared_infra import verify_archive_sha256
 _FALLBACK_CORE_COMMAND_NAMES = frozenset(
     {
         "analyze",
+        "avatar-brainstorm",
+        "brainstorm",
         "checklist",
         "clarify",
         "constitution",

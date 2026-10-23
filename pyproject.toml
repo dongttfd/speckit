@@ -32,6 +32,10 @@ packages = ["src/specify_cli"]
 # Page templates (exclude commands/ — bundled separately below to avoid duplication)
 "templates/checklist-template.md" = "specify_cli/core_pack/templates/checklist-template.md"
 "templates/constitution-template.md" = "specify_cli/core_pack/templates/constitution-template.md"
+"templates/idea-brief-template.md" = "specify_cli/core_pack/templates/idea-brief-template.md"
+"templates/idea-changelog-template.md" = "specify_cli/core_pack/templates/idea-changelog-template.md"
+"templates/idea-roadmap-template.md" = "specify_cli/core_pack/templates/idea-roadmap-template.md"
+"templates/idea-sources-template.md" = "specify_cli/core_pack/templates/idea-sources-template.md"
 "templates/plan-template.md" = "specify_cli/core_pack/templates/plan-template.md"
 "templates/spec-template.md" = "specify_cli/core_pack/templates/spec-template.md"
 "templates/tasks-template.md" = "specify_cli/core_pack/templates/tasks-template.md"

@@ -219,7 +219,8 @@ class MarkdownIntegrationTests:
     # -- Complete file inventory ------------------------------------------
 
     COMMAND_STEMS = [
-        "analyze", "clarify", "constitution", "converge", "implement",
+        "analyze", "avatar-brainstorm", "brainstorm", "clarify", "constitution",
+        "converge", "implement",
         "plan", "checklist", "specify", "tasks", "taskstoissues",
     ]
 
@@ -250,7 +251,10 @@ class MarkdownIntegrationTests:
                 files.append(f".specify/scripts/powershell/{name}")
 
         for name in ["checklist-template.md",
-                     "constitution-template.md", "plan-template.md",
+                     "constitution-template.md",
+                     "idea-brief-template.md", "idea-changelog-template.md",
+                     "idea-roadmap-template.md", "idea-sources-template.md",
+                     "plan-template.md",
                      "spec-template.md", "tasks-template.md"]:
             files.append(f".specify/templates/{name}")
 

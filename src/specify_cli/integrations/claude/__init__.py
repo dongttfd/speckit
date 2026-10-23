@@ -12,6 +12,8 @@ from ..._utils import dump_frontmatter
 # Mapping of command template stem → argument-hint text shown inline
 # when a user invokes the slash command in Claude Code.
 ARGUMENT_HINTS: dict[str, str] = {
+    "brainstorm": "An idea, broad theme, long-term vision, or saved idea to resume",
+    "avatar-brainstorm": "The feature question you want brainstormed",
     "specify": "Describe the feature you want to specify",
     "plan": "Optional guidance for the planning phase",
     "tasks": "Optional task generation constraints",

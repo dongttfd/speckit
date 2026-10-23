@@ -245,7 +245,8 @@ class TestBobDefaultSkillsMode:
         created = bob.setup(tmp_path, m)
 
         expected_commands = {
-            "analyze", "clarify", "constitution", "converge", "implement",
+            "analyze", "avatar-brainstorm", "brainstorm", "clarify",
+            "constitution", "converge", "implement",
             "plan", "checklist", "specify", "tasks", "taskstoissues",
         }
         actual_commands = {f.parent.name.removeprefix("speckit-") for f in created}
@@ -410,7 +411,8 @@ class TestBobInitFlowDefault:
         assert result.exit_code == 0, f"init failed: {result.output}"
 
         commands = [
-            "analyze", "clarify", "constitution", "converge", "implement",
+            "analyze", "avatar-brainstorm", "brainstorm", "clarify",
+            "constitution", "converge", "implement",
             "plan", "checklist", "specify", "tasks", "taskstoissues",
         ]
         for cmd in commands:

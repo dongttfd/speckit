@@ -238,6 +238,10 @@ class TestJunieIntegration(MarkdownIntegrationTests):
         for name in [
             "checklist-template.md",
             "constitution-template.md",
+            "idea-brief-template.md",
+            "idea-changelog-template.md",
+            "idea-roadmap-template.md",
+            "idea-sources-template.md",
             "plan-template.md",
             "spec-template.md",
             "tasks-template.md",

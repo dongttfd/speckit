@@ -96,6 +96,7 @@ class SkillsIntegrationTests:
         expected_commands = {
             "analyze", "clarify", "constitution", "converge", "implement",
             "plan", "checklist", "specify", "tasks", "taskstoissues",
+            "brainstorm", "avatar-brainstorm",
         }
 
         # Derive command names from the skill directory names
@@ -467,6 +468,7 @@ class SkillsIntegrationTests:
     _SKILL_COMMANDS = [
         "analyze", "clarify", "constitution", "converge", "implement",
         "plan", "checklist", "specify", "tasks", "taskstoissues",
+        "brainstorm", "avatar-brainstorm",
     ]
 
     def _expected_files(self, script_variant: str) -> list[str]:
@@ -511,6 +513,10 @@ class SkillsIntegrationTests:
         files += [
             ".specify/templates/checklist-template.md",
             ".specify/templates/constitution-template.md",
+            ".specify/templates/idea-brief-template.md",
+            ".specify/templates/idea-changelog-template.md",
+            ".specify/templates/idea-roadmap-template.md",
+            ".specify/templates/idea-sources-template.md",
             ".specify/templates/plan-template.md",
             ".specify/templates/spec-template.md",
             ".specify/templates/tasks-template.md",
